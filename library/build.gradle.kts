@@ -2,7 +2,7 @@
 val localVersionName = "local"
 
 group = "com.github.thumbtack"
-version = "0.0.1"
+version = "0.0.2"
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
