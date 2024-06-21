@@ -11,7 +11,7 @@ git checkout -b "release/$1"
 # Regex pattern adapted from
 # https://semver.org/#is-there-a-suggested-regular-expression-regex-to-check-a-semver-string
 # for compatibility with sed.
-sed -i "" -E "s/version *= *(["'"'"'])(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)(-(0|[1-9][0-9]]*|[0-9]*[a-zA-Z-][0-9a-zA-Z-]*)(\.(0|[1-9][0-9]*|[0-9]*[a-zA-Z-][0-9a-zA-Z-]*))*)?(\+[0-9a-zA-Z-]+(\.[0-9a-zA-Z-]+)*)?["'"'"']/version = \1$1\1/g" library/build.gradle.kts
+sed -E -i "s/version *= *(["'"'"'])(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)(-(0|[1-9][0-9]]*|[0-9]*[a-zA-Z-][0-9a-zA-Z-]*)(\.(0|[1-9][0-9]*|[0-9]*[a-zA-Z-][0-9a-zA-Z-]*))*)?(\+[0-9a-zA-Z-]+(\.[0-9a-zA-Z-]+)*)?["'"'"']/version = \1$1\1/g" library/build.gradle.kts
 
 # Commit changes and push.
 git add --all
