@@ -17,7 +17,8 @@ sed -E -i "s/version *= *(["'"'"'])(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-
 
 # Commit changes and push.
 git add --all
-git config user.name $2
+git config user.name "$2"
+git config user.email "$2@users.noreply.github.com"
 git commit -m "Release $1"
 git push https://$GITHUB_TOKEN@github.com/thumbtack/kotlin-testing-tools.git head:$(git branch --show-current)
 gh pr create --title "Release $1" --body "" --head $(git branch --show-current)
