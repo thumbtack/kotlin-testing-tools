@@ -17,7 +17,7 @@ jobs:
           persist-credentials: false
 
       - name: ⬆️ Bump version in thumbprint/build.gradle.kts
-        run: bash .github/scripts/commit_release.sh "${{ github.event.inputs.version }}"
+        run: bash .github/scripts/commit_release.sh "${{ github.event.inputs.version }}" "${{ github.actor }}"
         env:
           # When the default secrets.GITHUB_TOKEN is used to push the version bump branch,
           # GitHub will not trigger the `push` event that triggers CI to run on that branch.
