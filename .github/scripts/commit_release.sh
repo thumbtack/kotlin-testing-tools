@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -e -o pipefail
+set -x -e -o pipefail
 
 git checkout -b "release/$1"
 
