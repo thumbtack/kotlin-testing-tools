@@ -55,9 +55,20 @@ kotlin {
     }
 }
 
-// Create special release target that can handle special version label to local maven
+// Create special release target that can handle special version label to local maven,
+// and disable some publish*MavenLocal tasks so Jitpack doesn't generate a bunch of these
 afterEvaluate {
     val taskNames = this.gradle.startParameter.taskNames
+
+    project.tasks.forEach {
+        if (it.name.contains("publishJvmPublicationToMavenLocal")) {
+            it.enabled = false
+        }
+        if (it.name.contains("publishKotlinMultiplatformPublicationToMavenLocal")) {
+            it.enabled = false
+        }
+    }
+
     publishing {
         publications {
             create<MavenPublication>("Release") {
