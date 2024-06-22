@@ -2,7 +2,7 @@
 val localVersionName = "local"
 
 group = "com.github.thumbtack"
-version = "0.0.3"
+version = "0.0.4"
 
 if (properties.containsKey("localVersion")) {
     version = "local"
