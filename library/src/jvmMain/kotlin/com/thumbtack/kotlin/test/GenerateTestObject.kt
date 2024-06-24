@@ -270,6 +270,14 @@ private fun generateValueForSimpleField(
         Short::class.java -> 0.toShort()
         java.lang.Short::class.java -> 0.toShort()
         java.time.Instant::class.java -> Instant.EPOCH
+        IntArray::class.java -> intArrayOf(0, 0, 0)
+        FloatArray::class.java -> floatArrayOf(0f, 0f, 0f)
+        DoubleArray::class.java -> doubleArrayOf(0.0, 0.0, 0.0)
+        ShortArray::class.java -> shortArrayOf(0, 0, 0)
+        ByteArray::class.java -> byteArrayOf(0, 0, 0)
+        CharArray::class.java -> charArrayOf('a', 'a', 'a')
+        LongArray::class.java -> longArrayOf(0L, 0L, 0L)
+        BooleanArray::class.java -> booleanArrayOf(false, false, false)
         else -> (type as Class<*>).kotlin.generateTestObject(
             fullyQualifiedParamName,
             params,
