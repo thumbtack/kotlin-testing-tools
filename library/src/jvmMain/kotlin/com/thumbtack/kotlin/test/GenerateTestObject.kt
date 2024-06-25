@@ -73,6 +73,7 @@ fun <T : Any> KClass<T>.generateTestObject(
     overrides: Map<Regex, Any?>? = null,
     referenceDate: Date? = null,
     useNullForNullableFields: Boolean = false,
+    collectionSize: Int = 3,
 ): T {
     return generateTestObject(
         prefix,
@@ -80,6 +81,7 @@ fun <T : Any> KClass<T>.generateTestObject(
             overrides,
             referenceDate,
             useNullForNullableFields,
+            collectionSize, // TODO enforce size >= 1
         )
     )
 }
@@ -142,11 +144,12 @@ private fun generateValueForParameterizedType(
     prefix: String,
     params: Parameters,
 ): Any {
+    val collectionSize = params.collectionSize
     runCatching {
         when (type.rawType) {
             java.util.List::class.java,
             ArrayList::class.java ->
-                return List(3) { index ->
+                return List(collectionSize) { index ->
                     generateValueForField(
                         generateFieldType(type),
                         "$prefix$index",
@@ -154,25 +157,15 @@ private fun generateValueForParameterizedType(
                     )
                 }
             java.util.Set::class.java ->
-                return setOf(
+                return List(collectionSize) { index ->
                     generateValueForField(
                         generateFieldType(type),
-                        "${prefix}0",
-                        params,
-                    ),
-                    generateValueForField(
-                        generateFieldType(type),
-                        "${prefix}1",
-                        params,
-                    ),
-                    generateValueForField(
-                        generateFieldType(type),
-                        "${prefix}2",
+                        "$prefix$index",
                         params,
                     )
-                )
+                }.toSet()
             ArrayList::class.java ->
-                return List(3) { index ->
+                return List(collectionSize) { index ->
                     generateValueForField(
                         generateFieldType(type),
                         "$prefix$index",
@@ -180,7 +173,7 @@ private fun generateValueForParameterizedType(
                     )
                 }
             java.util.Map::class.java ->
-                return (0..2).associate { index ->
+                return (0..< collectionSize).associate { index ->
                     generateValueForField(
                         generateFieldType(type, 0),
                         "${prefix}${index}key",
@@ -194,7 +187,7 @@ private fun generateValueForParameterizedType(
                 }
             java.util.HashMap::class.java ->
                 return HashMap(
-                    (0..2).associate { index ->
+                    (0..< collectionSize).associate { index ->
                         generateValueForField(
                             generateFieldType(type, 0),
                             "${prefix}${index}key",
@@ -291,4 +284,5 @@ private data class Parameters(
     val overrides: Map<Regex, Any?>?,
     val referenceDate: Date?,
     val useNullForNullableFields: Boolean,
+    val collectionSize: Int,
 )
