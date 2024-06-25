@@ -11,6 +11,8 @@ import kotlin.reflect.KClass
 import kotlin.reflect.full.primaryConstructor
 import kotlin.reflect.javaType
 
+private const val DEFAULT_COLLECTION_SIZE = 3
+
 /**
  * Generates a test object for the given data class, where each field is given an actual,
  * unique value (as opposed to just some default value like empty string or null).
@@ -66,6 +68,8 @@ import kotlin.reflect.javaType
  *     specify a consistent value for this field.
  * @param useNullForNullableFields If true, then all fields that are nullable will be set to null,
  *     unless specified in the overrides map.
+ * @param collectionSize If specified, supported collection types will be set to that size rather
+ *     than
  * @return The generated object.
  */
 fun <T : Any> KClass<T>.generateTestObject(
@@ -73,7 +77,7 @@ fun <T : Any> KClass<T>.generateTestObject(
     overrides: Map<Regex, Any?>? = null,
     referenceDate: Date? = null,
     useNullForNullableFields: Boolean = false,
-    collectionSize: Int = 3,
+    collectionSize: Int = DEFAULT_COLLECTION_SIZE,
 ): T {
     return generateTestObject(
         prefix,
@@ -81,7 +85,7 @@ fun <T : Any> KClass<T>.generateTestObject(
             overrides,
             referenceDate,
             useNullForNullableFields,
-            collectionSize, // TODO enforce size >= 1
+            collectionSize.takeIf { it > 0 } ?: DEFAULT_COLLECTION_SIZE,
         )
     )
 }
