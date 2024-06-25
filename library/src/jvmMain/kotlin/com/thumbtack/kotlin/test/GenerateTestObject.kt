@@ -68,8 +68,8 @@ private const val DEFAULT_COLLECTION_SIZE = 3
  *     specify a consistent value for this field.
  * @param useNullForNullableFields If true, then all fields that are nullable will be set to null,
  *     unless specified in the overrides map.
- * @param collectionSize If specified, supported collection types will be set to that size rather
- *     than
+ * @param collectionSize If specified, supported collection types will be set to the specified
+ *     size rather than the default of size 3
  * @return The generated object.
  */
 fun <T : Any> KClass<T>.generateTestObject(
