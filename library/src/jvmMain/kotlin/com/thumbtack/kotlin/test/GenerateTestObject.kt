@@ -11,6 +11,8 @@ import kotlin.reflect.KClass
 import kotlin.reflect.full.primaryConstructor
 import kotlin.reflect.javaType
 
+private const val DEFAULT_COLLECTION_SIZE = 3
+
 /**
  * Generates a test object for the given data class, where each field is given an actual,
  * unique value (as opposed to just some default value like empty string or null).
@@ -66,6 +68,8 @@ import kotlin.reflect.javaType
  *     specify a consistent value for this field.
  * @param useNullForNullableFields If true, then all fields that are nullable will be set to null,
  *     unless specified in the overrides map.
+ * @param collectionSize If specified, supported collection types will be set to the specified
+ *     size rather than the default of size 3
  * @return The generated object.
  */
 fun <T : Any> KClass<T>.generateTestObject(
@@ -73,6 +77,7 @@ fun <T : Any> KClass<T>.generateTestObject(
     overrides: Map<Regex, Any?>? = null,
     referenceDate: Date? = null,
     useNullForNullableFields: Boolean = false,
+    collectionSize: Int = DEFAULT_COLLECTION_SIZE,
 ): T {
     return generateTestObject(
         prefix,
@@ -80,6 +85,7 @@ fun <T : Any> KClass<T>.generateTestObject(
             overrides,
             referenceDate,
             useNullForNullableFields,
+            collectionSize.takeIf { it > 0 } ?: DEFAULT_COLLECTION_SIZE,
         )
     )
 }
@@ -142,11 +148,12 @@ private fun generateValueForParameterizedType(
     prefix: String,
     params: Parameters,
 ): Any {
+    val collectionSize = params.collectionSize
     runCatching {
         when (type.rawType) {
             java.util.List::class.java,
             ArrayList::class.java ->
-                return List(3) { index ->
+                return List(collectionSize) { index ->
                     generateValueForField(
                         generateFieldType(type),
                         "$prefix$index",
@@ -154,25 +161,15 @@ private fun generateValueForParameterizedType(
                     )
                 }
             java.util.Set::class.java ->
-                return setOf(
+                return List(collectionSize) { index ->
                     generateValueForField(
                         generateFieldType(type),
-                        "${prefix}0",
-                        params,
-                    ),
-                    generateValueForField(
-                        generateFieldType(type),
-                        "${prefix}1",
-                        params,
-                    ),
-                    generateValueForField(
-                        generateFieldType(type),
-                        "${prefix}2",
+                        "$prefix$index",
                         params,
                     )
-                )
+                }.toSet()
             ArrayList::class.java ->
-                return List(3) { index ->
+                return List(collectionSize) { index ->
                     generateValueForField(
                         generateFieldType(type),
                         "$prefix$index",
@@ -180,7 +177,7 @@ private fun generateValueForParameterizedType(
                     )
                 }
             java.util.Map::class.java ->
-                return (0..2).associate { index ->
+                return (0..< collectionSize).associate { index ->
                     generateValueForField(
                         generateFieldType(type, 0),
                         "${prefix}${index}key",
@@ -194,7 +191,7 @@ private fun generateValueForParameterizedType(
                 }
             java.util.HashMap::class.java ->
                 return HashMap(
-                    (0..2).associate { index ->
+                    (0..< collectionSize).associate { index ->
                         generateValueForField(
                             generateFieldType(type, 0),
                             "${prefix}${index}key",
@@ -291,4 +288,5 @@ private data class Parameters(
     val overrides: Map<Regex, Any?>?,
     val referenceDate: Date?,
     val useNullForNullableFields: Boolean,
+    val collectionSize: Int,
 )

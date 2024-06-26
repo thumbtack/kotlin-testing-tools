@@ -13,6 +13,8 @@ class GenerateTestObjectTest {
         val booleanField: Boolean,
         val charField: Char,
         val listField: List<String>,
+        val setField: Set<String>,
+        val mapField: Map<String, String>,
         val intArray: IntArray,
         val floatArray: FloatArray,
         val doubleArray: DoubleArray,
@@ -49,5 +51,15 @@ class GenerateTestObjectTest {
         assertTrue(testObject.byteArray.all { it == 0.toByte() })
         assertEquals(3, testObject.booleanArray.size)
         assertTrue(testObject.booleanArray.all { !it })
+    }
+
+    @Test
+    fun `test collectionSize`() {
+        val collectionSize = 5
+        val testObject = SampleClass::class.generateTestObject(collectionSize = collectionSize)
+
+        assertEquals(collectionSize, testObject.listField.size)
+        assertEquals(collectionSize, testObject.setField.size)
+        assertEquals(collectionSize, testObject.mapField.size)
     }
 }
