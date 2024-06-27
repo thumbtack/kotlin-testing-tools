@@ -1,5 +1,7 @@
 package com.thumbtack.kotlin.test
 
+import java.time.Instant
+import java.util.Date
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
@@ -22,6 +24,8 @@ class GenerateTestObjectTest {
         val charArray: CharArray,
         val shortArray: ShortArray,
         val byteArray: ByteArray,
+        val date: Date,
+        val instant: Instant,
     )
 
     @Test
@@ -37,6 +41,15 @@ class GenerateTestObjectTest {
         testObject.listField.forEachIndexed { index, item ->
             assertEquals("listField${index}Value", item)
         }
+        assertEquals(3, testObject.setField.size)
+        testObject.setField.forEachIndexed { index, item ->
+            assertEquals("setField${index}Value", item)
+        }
+        assertEquals(3, testObject.mapField.size)
+        testObject.mapField.onEachIndexed { index, entry ->
+            assertEquals("mapField${index}keyValue", entry.key)
+            assertEquals("mapField${index}valueValue", entry.value)
+        }
         assertEquals(3, testObject.intArray.size)
         assertTrue(testObject.intArray.all { it == 0 })
         assertEquals(3, testObject.floatArray.size)
@@ -51,6 +64,8 @@ class GenerateTestObjectTest {
         assertTrue(testObject.byteArray.all { it == 0.toByte() })
         assertEquals(3, testObject.booleanArray.size)
         assertTrue(testObject.booleanArray.all { !it })
+        assertEquals(Date(0), testObject.date)
+        assertEquals(Instant.EPOCH, testObject.instant)
     }
 
     @Test
@@ -61,5 +76,15 @@ class GenerateTestObjectTest {
         assertEquals(collectionSize, testObject.listField.size)
         assertEquals(collectionSize, testObject.setField.size)
         assertEquals(collectionSize, testObject.mapField.size)
+    }
+
+    @Test
+    fun `test referenceDate`() {
+        val currentDate = Date()
+        val testObject = SampleClass::class.generateTestObject(referenceDate = currentDate)
+
+        assertEquals(currentDate, testObject.date)
+        assertEquals(currentDate.toInstant(), testObject.instant)
+        assertEquals(testObject.date.toInstant(), testObject.instant)
     }
 }

@@ -266,7 +266,7 @@ private fun generateValueForSimpleField(
         java.lang.Byte::class.java -> 0.toByte()
         Short::class.java -> 0.toShort()
         java.lang.Short::class.java -> 0.toShort()
-        java.time.Instant::class.java -> Instant.EPOCH
+        java.time.Instant::class.java -> params.referenceDate?.toInstant() ?: Instant.EPOCH
         IntArray::class.java -> intArrayOf(0, 0, 0)
         FloatArray::class.java -> floatArrayOf(0f, 0f, 0f)
         DoubleArray::class.java -> doubleArrayOf(0.0, 0.0, 0.0)
