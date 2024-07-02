@@ -168,14 +168,6 @@ private fun generateValueForParameterizedType(
                         params,
                     )
                 }.toSet()
-            ArrayList::class.java ->
-                return List(collectionSize) { index ->
-                    generateValueForField(
-                        generateFieldType(type),
-                        "$prefix$index",
-                        params,
-                    )
-                }
             java.util.Map::class.java ->
                 return (0..< collectionSize).associate { index ->
                     generateValueForField(
