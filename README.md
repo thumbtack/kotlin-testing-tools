@@ -166,7 +166,7 @@ every field, only overriding those we need to.
 
 ## Contributing
 
-Thumbprint accepts issues and pull requests. Take at look at our [contribution instructions](CONTRIBUTING.md) if you'd like to contribute.
+Kotlin Testing Tools accepts issues and pull requests. Take at look at our [contribution instructions](CONTRIBUTING.md) if you'd like to contribute.
 
 ## License
 
